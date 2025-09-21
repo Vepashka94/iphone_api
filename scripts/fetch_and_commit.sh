@@ -8,6 +8,12 @@ TMP="/tmp/iphone_api.tmp"
 # web sahypadan maglumat alyp, wagtlaýyn faýla ýaz
 curl -sSfL "$URL" -o "$TMP" || { echo "Fetch failed"; exit 2; }
 
+# maglumat boş dälmi?
+if [ ! -s "$TMP" ]; then
+  echo "Boş maglumat geldi, commit ýok"
+  exit 0
+fi
+
 # bukja bar bolsa goýmaga taýýarla
 mkdir -p "$(dirname "$OUT")"
 
