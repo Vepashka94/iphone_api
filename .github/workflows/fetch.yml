@@ -2,9 +2,9 @@ name: Fetch VPNGate API
 
 on:
   schedule:
-    # her 15 minutda işleýär
+    # her 15 minutda işlesin
     - cron: '*/15 * * * *'
-  workflow_dispatch: # el bilen işledip bolar
+  workflow_dispatch: {} # isleseň el bilen işledip bilersiň
 
 jobs:
   fetch:
@@ -12,7 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run fetch script
+      - name: Download VPNGate data
         run: |
-          chmod +x scripts/fetch_and_commit.sh
-          ./scripts/fetch_and_commit.sh
+          mkdir -p data
+          curl -sSfL "https://www.vpngate.net/api/iphone/" -o data/iphone_api.json
+
+      - name: Commit and push if changed
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add data/iphone_api.json
+            git commit -m "Auto-update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
+          else
+            echo "No changes."
+          fi
