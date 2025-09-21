@@ -1,6 +1,5 @@
-name: Avtomatiki Täzelik Push
+name: Iphone API Täzelik Push
 
-# Bu workflow diňe main (baş) şahamçasyna işlediler
 on:
   push:
     branches:
@@ -12,28 +11,33 @@ permissions:
   contents: write  # GITHUB_TOKEN bilen ýazmaga rugsat berýär
 
 jobs:
-  update-and-push:
+  update-iphone-api:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Repo-ny klonla
+    # Repo-ny klonla
+    - name: Checkout repo
       uses: actions/checkout@v3
 
-    - name: Script-i işledip täzelik döret
+    # fetch_and_commit.sh script-ini işledip, json-i doldur
+    - name: Iphone API script-i işledip json täzeläň
       run: |
-        # Mysal üçin bir faýl üýtgedilýär
-        echo "Täzelik wagty: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> update_log.txt
+        chmod +x ./scripts/fetch_and_commit.sh
+        ./scripts/fetch_and_commit.sh
 
+    # Git konfigurasiýasy
     - name: Git konfigurasiýasy
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    - name: Üýtgeşmeleri commit et
+    # Üýtgeşmeleri commit et
+    - name: Commit üýtgeşmeler
       run: |
-        git add .
+        git add data/iphone_api.json
         git commit -m "Avtomatiki täzelik $(date -u +"%Y-%m-%dT%H:%M:%SZ")" || echo "Üýtgeşme ýok"
 
-    - name: Üýtgeşmeleri push et
+    # Üýtgeşmeleri push et
+    - name: Push üýtgeşmeler
       run: |
         git push origin main
