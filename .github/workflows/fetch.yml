@@ -2,6 +2,7 @@ name: Fetch VPNGate API
 
 on:
   schedule:
+    # her 15 minutda işleýär
     - cron: '*/15 * * * *'
   workflow_dispatch:
 
@@ -17,6 +18,7 @@ jobs:
         run: |
           mkdir -p data
           curl -k -L "https://www.vpngate.net/api/iphone/" -o data/iphone_api.json
+          echo "=== First 20 lines of downloaded file ==="
           head -n 20 data/iphone_api.json
 
       - name: Commit and push if changed
@@ -24,4 +26,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/iphone_api.json
-          git diff --quiet && echo "No changes to commit" || (git commit -m "Auto-update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" && git push)
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
+          fi
