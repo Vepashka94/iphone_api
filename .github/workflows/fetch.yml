@@ -14,21 +14,8 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Download VPNGate data
-        run: |
-          mkdir -p data
-          curl -k -L "https://www.vpngate.net/api/iphone/" -o data/iphone_api.json
-          echo "=== First 20 lines of downloaded file ==="
-          head -n 20 data/iphone_api.json
+      - name: Make script executable
+        run: chmod +x scripts/fetch_and_commit.sh
 
-      - name: Commit and push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/iphone_api.json
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Auto-update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-            git push
-          fi
+      - name: Run fetch script
+        run: ./scripts/fetch_and_commit.sh
