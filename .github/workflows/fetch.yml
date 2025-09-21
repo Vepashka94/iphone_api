@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 * * * *' # Her sagady bir gezek işleýär
+    - cron: '0 * * * *' # Her sagady bir gezek
 
 permissions:
   contents: write  # GITHUB_TOKEN bilen ýazmaga rugsat berýär
@@ -19,7 +19,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v3
 
-    # fetch_and_commit.sh script-ini işledip, json-i doldur
+    # fetch_and_commit.sh script-ini işledip, json täzeläň
     - name: Iphone API script-i işledip json täzeläň
       run: |
         chmod +x ./scripts/fetch_and_commit.sh
