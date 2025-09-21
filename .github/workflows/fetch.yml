@@ -2,7 +2,6 @@ name: Fetch VPNGate API
 
 on:
   schedule:
-    # her 15 minutda işleýär
     - cron: '*/15 * * * *'
   workflow_dispatch:
 
@@ -12,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
       - name: Make script executable
